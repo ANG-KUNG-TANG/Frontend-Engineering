@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Component Hierarchy — YouTube vs ChatGPT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5F7FA;
+    --surface:#FFFFFF;
+    --ink:#10151F;
+    --muted:#5B6572;
+    --line:#C9D3E0;
+    --line-soft:#E1E7F0;
+    --accent:#2F5EFF;
+    --accent-soft:#E8EDFF;
+    --accent-ink:#1A3ACF;
+    --mono:'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+    --sans:'Inter', system-ui, -apple-system, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--bg); color:var(--ink); font-family:var(--sans); line-height:1.55;}
+
+  .wrap{max-width:900px; margin:0 auto; padding:44px 24px 120px;}
+  @media (max-width:600px){.wrap{padding:28px 16px 80px;}}
+
+  .intro h1{font-family:var(--mono); font-size:26px; margin:0 0 8px; letter-spacing:-0.01em;}
+  .intro p{color:var(--muted); max-width:680px; font-size:15px;}
+  .intro{margin-bottom:30px; padding-bottom:24px; border-bottom:1px dashed var(--line);}
+
+  .levels{
+    display:flex; flex-wrap:wrap; gap:8px;
+    margin-bottom:44px; padding-bottom:26px;
+    border-bottom:1px dashed var(--line);
+    font-family:var(--mono); font-size:12px;
+  }
+  .levels span{
+    background:var(--accent-soft); color:var(--accent-ink);
+    border:1px solid #C9D6FF; border-radius:999px; padding:4px 12px;
+  }
+  .levels .arrow{background:none; border:none; color:var(--muted); padding:4px 0;}
+
+  .app{margin-bottom:56px;}
+  .app-head{display:flex; align-items:baseline; gap:10px; margin-bottom:14px; flex-wrap:wrap;}
+  .app-badge{
+    font-family:var(--mono); font-size:12px; font-weight:600;
+    background:var(--ink); color:#fff; padding:3px 10px; border-radius:6px;
+  }
+  .app-page{font-family:var(--mono); font-size:13px; color:var(--muted);}
+
+  /* mini layout diagram */
+  .layoutmini{display:flex; gap:6px; height:64px; margin-bottom:22px;}
+  .lm-cell{
+    background:var(--surface); border:1px solid var(--line-soft); border-radius:8px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--mono); font-size:11px; color:var(--muted);
+  }
+  .lm-stack{flex:1; display:flex; flex-direction:column; gap:6px;}
+  .lm-stack .lm-cell{flex:1;}
+  .lm-stack .lm-thin{flex:0 0 20px;}
+
+  /* tree */
+  .tree{
+    background:var(--surface); border:1px solid var(--line-soft); border-radius:10px;
+    padding:20px 24px; font-size:13.5px; line-height:1.95;
+  }
+  .tree ul{list-style:none; margin:0; padding-left:20px; border-left:0.5px solid var(--line);}
+  .tree>ul{border-left:none; padding-left:0;}
+  .tree li{position:relative; padding-left:14px;}
+  .tree li::before{content:""; position:absolute; left:0; top:15px; width:12px; height:0.5px; background:var(--line);}
+  .lvl1{font-family:var(--mono); font-weight:600; color:var(--ink);}
+  .lvl2{font-weight:600;}
+  .lvl3{color:var(--muted); font-size:12.5px;}
+
+  .zoom{
+    margin-top:16px; padding:14px 18px;
+    background:var(--accent-soft); border:1px solid #C9D6FF; border-radius:8px;
+    font-size:13px; color:var(--accent-ink);
+  }
+  .zoom b{font-weight:600;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="intro">
+    <h1>&lt;component-hierarchy/&gt;</h1>
+    <p>Two real UIs broken down the way a frontend engineer reads them — not as one page, but as a tree of responsibilities. Same six-step lens applied to each, kept as two separate trees so the patterns are easy to compare.</p>
+  </div>
+
+  <nav class="levels">
+    <span>Application</span><span class="arrow">→</span>
+    <span>Page</span><span class="arrow">→</span>
+    <span>Layout</span><span class="arrow">→</span>
+    <span>Sections</span><span class="arrow">→</span>
+    <span>Components</span><span class="arrow">→</span>
+    <span>Elements</span>
+  </nav>
+
+  <section class="app">
+    <div class="app-head">
+      <span class="app-badge">YouTube</span>
+      <span class="app-page">Home page · sidebar + top-nav + content layout</span>
+    </div>
+
+    <div class="layoutmini">
+      <div class="lm-cell" style="flex:0 0 90px">Sidebar</div>
+      <div class="lm-stack">
+        <div class="lm-cell lm-thin">Top navigation</div>
+        <div class="lm-cell">Video grid</div>
+      </div>
+    </div>
+
+    <div class="tree">
+      <ul>
+        <li class="lvl1">Home page
+          <ul>
+            <li class="lvl2">Top navigation
+              <ul><li class="lvl3">HamburgerButton, Logo, SearchBar, SearchButton, VoiceButton, CreateButton, NotificationButton, UserAvatar</li></ul>
+            </li>
+            <li class="lvl2">Sidebar
+              <ul><li class="lvl3">MainNavigation (NavigationItem × N), SubscriptionList, LibraryMenu, FooterLinks</li></ul>
+            </li>
+            <li class="lvl2">Category navigation
+              <ul><li class="lvl3">CategoryChip — repeated, one component, text changes</li></ul>
+            </li>
+            <li class="lvl2">Video grid
+              <ul><li class="lvl3">VideoCard — repeated: Thumbnail, DurationBadge, VideoTitle, ChannelName, VideoMetadata, MenuButton</li></ul>
+            </li>
+            <li class="lvl2">Mini player
+              <ul><li class="lvl3">Thumbnail, Title, ProgressBar, Controls, CloseButton</li></ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div class="zoom"><b>Zoom in:</b> SearchBar isn't one element — it's TextInput + Placeholder + ClearButton(X) + SearchIcon composed together. Same with Thumbnail: Image + DurationBadge + (optional) ProgressBar.</div>
+  </section>
+
+  <section class="app">
+    <div class="app-head">
+      <span class="app-badge">ChatGPT</span>
+      <span class="app-page">Chat page · sidebar + content layout</span>
+    </div>
+
+    <div class="layoutmini">
+      <div class="lm-cell" style="flex:0 0 90px">Sidebar</div>
+      <div class="lm-stack">
+        <div class="lm-cell lm-thin">Breadcrumb header</div>
+        <div class="lm-cell">Conversation area</div>
+        <div class="lm-cell lm-thin">Message composer</div>
+      </div>
+    </div>
+
+    <div class="tree">
+      <ul>
+        <li class="lvl1">Chat page
+          <ul>
+            <li class="lvl2">Sidebar
+              <ul><li class="lvl3">TabGroup, ChatNavigation, ChatList (ChatItem × N), UserProfile, SidebarFooter</li></ul>
+            </li>
+            <li class="lvl2">Breadcrumb header
+              <ul><li class="lvl3">FolderIcon, WorkspaceName, Separator, ChatTitle</li></ul>
+            </li>
+            <li class="lvl2">Conversation area
+              <ul><li class="lvl3">UserMessage / AssistantMessage — repeated, alternating</li></ul>
+            </li>
+            <li class="lvl2">Message composer
+              <ul><li class="lvl3">TextArea, VoiceButton, AttachmentButton, SendButton</li></ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div class="zoom"><b>Zoom in:</b> AssistantMessage is Avatar + Markdown + CodeBlock + CopyButton + Actions — and CodeBlock itself nests further into Header + LanguageLabel + CopyButton + CodeContent. Components containing components, all the way down.</div>
+  </section>
+</div>
+</body>
+</html>

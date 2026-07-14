@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UI Anatomy — Common Page Sections Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5F7FA;
+    --surface:#FFFFFF;
+    --ink:#10151F;
+    --muted:#5B6572;
+    --line:#C9D3E0;
+    --line-soft:#E1E7F0;
+    --accent:#2F5EFF;
+    --accent-soft:#E8EDFF;
+    --accent-ink:#1A3ACF;
+    --mono:'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+    --sans:'Inter', system-ui, -apple-system, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.55;
+  }
+  a{color:var(--accent);}
+
+  /* ---------- Page shell ---------- */
+  .shell{
+    display:grid;
+    grid-template-columns:260px 1fr;
+    max-width:1320px;
+    margin:0 auto;
+  }
+  @media (max-width: 880px){
+    .shell{grid-template-columns:1fr;}
+    .toc{display:none;}
+  }
+
+  .toc{
+    position:sticky;
+    top:0;
+    align-self:start;
+    height:100vh;
+    overflow-y:auto;
+    padding:28px 18px 28px 24px;
+    border-right:1px dashed var(--line);
+  }
+  .toc-title{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin:0 0 14px;
+  }
+  .toc ol{
+    list-style:none;
+    margin:0; padding:0;
+    counter-reset:toc;
+  }
+  .toc li{counter-increment:toc;}
+  .toc a{
+    display:flex;
+    gap:8px;
+    padding:6px 8px;
+    border-radius:6px;
+    text-decoration:none;
+    color:var(--ink);
+    font-size:13px;
+  }
+  .toc a:hover{background:var(--accent-soft); color:var(--accent-ink);}
+  .toc a::before{
+    content:counter(toc,decimal-leading-zero);
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--muted);
+  }
+
+  .main{padding:40px 48px 120px;}
+  @media (max-width:600px){.main{padding:28px 18px 80px;}}
+
+  .intro h1{
+    font-family:var(--mono);
+    font-size:28px;
+    margin:0 0 8px;
+    letter-spacing:-0.01em;
+  }
+  .intro p{color:var(--muted); max-width:640px; font-size:15px;}
+  .intro{margin-bottom:40px; padding-bottom:24px; border-bottom:1px dashed var(--line);}
+
+  /* ---------- Section card ---------- */
+  .part{
+    margin-bottom:56px;
+    scroll-margin-top:24px;
+  }
+  .part-head{
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+    margin-bottom:10px;
+    flex-wrap:wrap;
+  }
+  .part-num{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--muted);
+  }
+  .part-name{
+    font-family:var(--mono);
+    font-size:16px;
+    font-weight:600;
+  }
+  .part-tag{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--accent-ink);
+    background:var(--accent-soft);
+    border:1px solid #C9D6FF;
+    padding:2px 8px;
+    border-radius:4px;
+  }
+  .part-desc{
+    color:var(--muted);
+    font-size:14px;
+    max-width:760px;
+    margin:0 0 16px;
+  }
+
+  /* ---------- Inspector-style viewport ---------- */
+  .viewport{
+    position:relative;
+    background:var(--surface);
+    border:1px solid var(--line-soft);
+    border-radius:10px;
+    padding:26px 20px 20px;
+    overflow:auto;
+  }
+  .viewport::before, .viewport::after,
+  .viewport .c2, .viewport .c3{
+    content:"";
+    position:absolute;
+    width:14px; height:14px;
+    border-color:var(--accent);
+    border-style:solid;
+    pointer-events:none;
+  }
+  .viewport::before{ top:8px; left:8px; border-width:2px 0 0 2px; }
+  .viewport::after{ top:8px; right:8px; border-width:2px 2px 0 0; }
+  .viewport .c2{ bottom:8px; left:8px; border-width:0 0 2px 2px; }
+  .viewport .c3{ bottom:8px; right:8px; border-width:0 2px 2px 0; }
+  .viewport .badge{
+    position:absolute;
+    top:-1px; left:20px;
+    transform:translateY(-50%);
+    background:var(--accent);
+    color:#fff;
+    font-family:var(--mono);
+    font-size:10px;
+    padding:2px 8px;
+    border-radius:4px;
+  }
+
+  /* ---------- Code panel ---------- */
+  .codebox{
+    margin-top:12px;
+    background:#0E1320;
+    border-radius:8px;
+    overflow:hidden;
+  }
+  .codebox .bar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:8px 12px;
+    font-family:var(--mono);
+    font-size:11px;
+    color:#7C8AA8;
+    border-bottom:1px solid #1D2436;
+  }
+  .codebox button{
+    font-family:var(--mono);
+    font-size:11px;
+    color:#B9C3DC;
+    background:#1A2033;
+    border:1px solid #29314A;
+    padding:3px 8px;
+    border-radius:4px;
+    cursor:pointer;
+  }
+  .codebox button:hover{background:#232B45;}
+  .codebox pre{
+    margin:0;
+    padding:14px 16px;
+    overflow-x:auto;
+    font-family:var(--mono);
+    font-size:12.5px;
+    line-height:1.6;
+    color:#D7DEEF;
+  }
+
+  /* ================================================================
+     Scoped mini design-system used ONLY inside demo viewports
+     (prefixed with d- so it never collides with the page shell)
+     ================================================================ */
+  .d-scope{font-family:var(--sans); color:var(--ink); font-size:14px;}
+  .d-scope button{font-family:var(--sans); cursor:pointer;}
+  .d-btn{
+    background:var(--accent); color:#fff; border:none;
+    padding:8px 16px; border-radius:6px; font-size:13px; font-weight:600;
+  }
+  .d-btn.ghost{background:transparent; color:var(--accent); border:1px solid var(--accent);}
+  .d-muted{color:var(--muted);}
+
+  /* header / navbar */
+  .d-header{display:flex; align-items:center; justify-content:space-between; padding:14px 18px; background:var(--ink); color:#fff; border-radius:8px;}
+  .d-header .brand{font-weight:700;}
+  .d-header nav{display:flex; gap:18px;}
+  .d-header nav a{color:#D7DEEF; text-decoration:none; font-size:13px;}
+
+  /* breadcrumb */
+  .d-breadcrumb{display:flex; gap:6px; font-size:13px; color:var(--muted);}
+  .d-breadcrumb a{text-decoration:none;}
+  .d-breadcrumb .sep{color:#B9C3DC;}
+  .d-breadcrumb .current{color:var(--ink); font-weight:600;}
+
+  /* hero */
+  .d-hero{background:linear-gradient(135deg,var(--accent-soft),#fff); border-radius:10px; padding:40px 28px; text-align:center;}
+  .d-hero h2{margin:0 0 8px; font-size:26px;}
+  .d-hero p{color:var(--muted); max-width:440px; margin:0 auto 18px;}
+
+  /* sidebar */
+  .d-layout{display:flex; gap:16px;}
+  .d-sidebar{width:150px; background:#F3F5F9; border-radius:8px; padding:14px; font-size:13px;}
+  .d-sidebar div{padding:6px 0; color:var(--muted);}
+  .d-sidebar div.active{color:var(--accent); font-weight:600;}
+  .d-content{flex:1; background:#F9FAFC; border-radius:8px; padding:16px; color:var(--muted); font-size:13px;}
+
+  /* card / grid */
+  .d-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:14px;}
+  .d-card{background:#fff; border:1px solid var(--line-soft); border-radius:10px; padding:16px;}
+  .d-card h4{margin:8px 0 4px; font-size:14px;}
+  .d-card p{margin:0; font-size:12px; color:var(--muted);}
+  .d-card .dot{width:28px;height:28px;border-radius:8px;background:var(--accent-soft);}
+
+  /* carousel */
+  .d-carousel{display:flex; align-items:center; gap:10px;}
+  .d-carousel .slide{flex:1; height:90px; background:var(--accent-soft); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--accent-ink); font-size:12px;}
+  .d-carousel .arrow{width:30px; height:30px; border-radius:50%; border:1px solid var(--line); background:#fff;}
+  .d-dots{display:flex; gap:6px; justify-content:center; margin-top:8px;}
+  .d-dots span{width:6px; height:6px; border-radius:50%; background:var(--line);}
+  .d-dots span.active{background:var(--accent);}
+
+  /* tabs */
+  .d-tabs{display:flex; gap:4px; border-bottom:1px solid var(--line-soft); margin-bottom:12px;}
+  .d-tabs button{background:none; border:none; padding:8px 12px; font-size:13px; color:var(--muted); border-bottom:2px solid transparent;}
+  .d-tabs button.active{color:var(--accent); border-bottom-color:var(--accent); font-weight:600;}
+
+  /* accordion */
+  .d-accordion-item{border:1px solid var(--line-soft); border-radius:8px; margin-bottom:8px; overflow:hidden;}
+  .d-accordion-item summary{padding:10px 14px; font-size:13px; font-weight:600; cursor:pointer; list-style:none;}
+  .d-accordion-item summary::-webkit-details-marker{display:none;}
+  .d-accordion-item .body{padding:0 14px 12px; font-size:13px; color:var(--muted);}
+
+  /* modal */
+  .d-modal-wrap{background:#EEF1F6; border-radius:10px; padding:30px; display:flex; justify-content:center;}
+  .d-modal{background:#fff; width:260px; border-radius:10px; box-shadow:0 10px 30px rgba(16,21,31,.15); padding:18px;}
+  .d-modal h4{margin:0 0 8px;}
+  .d-modal p{font-size:13px; color:var(--muted); margin:0 0 14px;}
+  .d-modal .row{display:flex; gap:8px; justify-content:flex-end;}
+
+  /* form */
+  .d-form{display:flex; flex-direction:column; gap:10px; max-width:280px;}
+  .d-form label{font-size:12px; color:var(--muted);}
+  .d-form input{padding:8px 10px; border:1px solid var(--line); border-radius:6px; font-size:13px;}
+
+  /* table */
+  .d-table{width:100%; border-collapse:collapse; font-size:13px;}
+  .d-table th{text-align:left; font-family:var(--mono); font-size:11px; color:var(--muted); border-bottom:1px solid var(--line-soft); padding:8px;}
+  .d-table td{padding:8px; border-bottom:1px solid var(--line-soft);}
+
+  /* pagination */
+  .d-pagination{display:flex; gap:6px;}
+  .d-pagination button{width:28px; height:28px; border-radius:6px; border:1px solid var(--line-soft); background:#fff; font-size:12px;}
+  .d-pagination button.active{background:var(--accent); color:#fff; border-color:var(--accent);}
+
+  /* alert */
+  .d-alert{display:flex; gap:10px; align-items:flex-start; padding:12px 14px; border-radius:8px; background:#FFF6E5; border:1px solid #F4DFA6; font-size:13px;}
+
+  /* badge */
+  .d-badge{display:inline-block; padding:2px 10px; border-radius:999px; font-size:11px; background:var(--accent-soft); color:var(--accent-ink); font-weight:600;}
+
+  /* tooltip */
+  .d-tooltip-wrap{position:relative; display:inline-block;}
+  .d-tooltip-wrap .tip{position:absolute; bottom:120%; left:50%; transform:translateX(-50%); background:var(--ink); color:#fff; font-size:11px; padding:4px 8px; border-radius:4px; white-space:nowrap;}
+
+  /* dropdown */
+  .d-dropdown{position:relative; display:inline-block;}
+  .d-dropdown .menu{position:absolute; top:110%; left:0; background:#fff; border:1px solid var(--line-soft); border-radius:8px; box-shadow:0 8px 20px rgba(16,21,31,.1); min-width:140px; overflow:hidden;}
+  .d-dropdown .menu div{padding:8px 12px; font-size:13px;}
+  .d-dropdown .menu div:hover{background:var(--accent-soft);}
+
+  /* progress */
+  .d-progress{height:8px; background:var(--line-soft); border-radius:99px; overflow:hidden;}
+  .d-progress .fill{height:100%; width:62%; background:var(--accent);}
+
+  /* stepper */
+  .d-stepper{display:flex; align-items:center;}
+  .d-stepper .step{width:26px; height:26px; border-radius:50%; background:var(--accent); color:#fff; font-size:12px; display:flex; align-items:center; justify-content:center;}
+  .d-stepper .step.todo{background:var(--line-soft); color:var(--muted);}
+  .d-stepper .bar{flex:1; height:2px; background:var(--line-soft); margin:0 6px;}
+
+  /* avatar */
+  .d-profile{display:flex; align-items:center; gap:10px;}
+  .d-avatar{width:38px; height:38px; border-radius:50%; background:var(--accent-soft); color:var(--accent-ink); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px;}
+
+  /* search */
+  .d-search{display:flex; align-items:center; gap:8px; border:1px solid var(--line); border-radius:8px; padding:8px 12px; max-width:280px;}
+  .d-search input{border:none; outline:none; flex:1; font-size:13px;}
+
+  /* pricing */
+  .d-pricing{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px;}
+  .d-price-card{border:1px solid var(--line-soft); border-radius:10px; padding:16px; text-align:center;}
+  .d-price-card.highlight{border-color:var(--accent); box-shadow:0 0 0 2px var(--accent-soft);}
+  .d-price-card .amount{font-size:22px; font-weight:700; margin:6px 0;}
+
+  /* testimonial */
+  .d-testimonial{background:#F9FAFC; border-radius:10px; padding:18px; font-size:13px;}
+  .d-testimonial .who{margin-top:10px; font-size:12px; color:var(--muted);}
+
+  /* faq */
+  .d-faq .q{font-weight:600; font-size:13px; margin-bottom:2px;}
+  .d-faq .a{font-size:13px; color:var(--muted); margin:0 0 14px;}
+
+  /* newsletter */
+  .d-newsletter{display:flex; gap:8px; background:var(--ink); padding:20px; border-radius:10px; color:#fff; align-items:center; flex-wrap:wrap;}
+  .d-newsletter input{padding:8px 10px; border-radius:6px; border:none; flex:1; min-width:140px;}
+
+  /* CTA */
+  .d-cta{background:var(--accent); color:#fff; border-radius:10px; padding:26px; text-align:center;}
+
+  /* footer */
+  .d-footer{background:#F3F5F9; border-radius:10px; padding:20px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px; font-size:12px; color:var(--muted);}
+  .d-footer .col h5{color:var(--ink); font-size:12px; margin:0 0 8px;}
+  .d-footer .col div{margin:4px 0;}
+
+  /* container */
+  .d-container{border:1px dashed var(--line); border-radius:8px; padding:16px; max-width:320px; margin:0 auto; text-align:center; color:var(--muted); font-size:12px;}
+
+  /* panel */
+  .d-panel{background:#fff; border:1px solid var(--line-soft); border-radius:10px;}
+  .d-panel .panel-head{padding:10px 14px; border-bottom:1px solid var(--line-soft); font-size:12px; font-weight:600;}
+  .d-panel .panel-body{padding:14px; font-size:13px; color:var(--muted);}
+
+  /* widget */
+  .d-widget{background:#fff; border:1px solid var(--line-soft); border-radius:10px; padding:14px; width:160px;}
+  .d-widget .label{font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em;}
+  .d-widget .value{font-size:22px; font-weight:700; margin:4px 0;}
+  .d-widget .delta{font-size:11px; color:#1E9E5A;}
+
+  /* topbar */
+  .d-topbar{display:flex; align-items:center; justify-content:space-between; background:#fff; border:1px solid var(--line-soft); border-radius:8px; padding:8px 14px; font-size:13px;}
+  .d-topbar .actions{display:flex; gap:10px; align-items:center;}
+
+  /* drawer */
+  .d-drawer-wrap{background:#EEF1F6; border-radius:10px; padding:0; overflow:hidden; display:flex; height:160px;}
+  .d-drawer{width:150px; background:#fff; border-right:1px solid var(--line-soft); padding:14px; font-size:13px;}
+  .d-drawer div{padding:6px 0; color:var(--muted);}
+  .d-drawer-rest{flex:1; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:12px;}
+
+  /* toast */
+  .d-toast{display:inline-flex; align-items:center; gap:10px; background:var(--ink); color:#fff; padding:10px 14px; border-radius:8px; font-size:13px;}
+
+  /* skeleton */
+  .d-skeleton{display:flex; gap:12px; align-items:center;}
+  .d-skeleton .sk-circle{width:40px; height:40px; border-radius:50%; background:linear-gradient(90deg,#EDEFF3,#F7F8FA,#EDEFF3); background-size:200% 100%; animation:sk 1.4s infinite;}
+  .d-skeleton .sk-lines{flex:1; display:flex; flex-direction:column; gap:8px;}
+  .d-skeleton .sk-line{height:10px; border-radius:4px; background:linear-gradient(90deg,#EDEFF3,#F7F8FA,#EDEFF3); background-size:200% 100%; animation:sk 1.4s infinite;}
+  .d-skeleton .sk-line.short{width:40%;}
+  @keyframes sk{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
+  /* chip */
+  .d-chip{display:inline-flex; align-items:center; gap:6px; background:#F3F5F9; border-radius:999px; padding:4px 6px 4px 12px; font-size:12px;}
+  .d-chip button{border:none; background:var(--line-soft); border-radius:50%; width:16px; height:16px; font-size:10px; line-height:1; cursor:pointer;}
+
+  /* timeline */
+  .d-timeline{position:relative; padding-left:20px;}
+  .d-timeline::before{content:""; position:absolute; left:5px; top:4px; bottom:4px; width:2px; background:var(--line-soft);}
+  .d-timeline .event{position:relative; margin-bottom:16px; font-size:13px;}
+  .d-timeline .event::before{content:""; position:absolute; left:-20px; top:4px; width:10px; height:10px; border-radius:50%; background:var(--accent);}
+  .d-timeline .event .when{font-size:11px; color:var(--muted);}
+
+  /* ---------- Layout patterns (Module 3/4 style diagrams) ---------- */
+  .patterns{margin-bottom:48px; padding-bottom:28px; border-bottom:1px dashed var(--line);}
+  .patterns h2{font-family:var(--mono); font-size:15px; margin:0 0 4px;}
+  .patterns > p{color:var(--muted); font-size:13px; margin:0 0 18px; max-width:700px;}
+  .pattern-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px;}
+  .pattern-card{background:var(--surface); border:1px solid var(--line-soft); border-radius:10px; padding:14px;}
+  .pattern-card h4{font-family:var(--mono); font-size:12px; margin:0 0 10px; color:var(--accent-ink);}
+  .pattern-diagram{display:flex; flex-direction:column; gap:4px; font-family:var(--mono); font-size:10px; color:var(--muted);}
+  .pblock{background:var(--accent-soft); border:1px solid #C9D6FF; border-radius:4px; padding:6px; text-align:center;}
+  .prow{display:flex; gap:4px;}
+  .prow .pblock{flex:1;}
+  .prow .pblock.narrow{flex:0 0 30%;}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="toc">
+    <p class="toc-title">Jump to section</p>
+    <ol id="tocList"></ol>
+  </aside>
+
+  <main class="main">
+    <div class="intro">
+      <h1>&lt;ui-anatomy/&gt;</h1>
+      <p>A reference sheet of the recurring "body parts" of a web UI: the common page layouts, then every individual element inside them — one explanation of what each does and when to use it, followed by a working HTML/CSS implementation you can lift directly. Each demo is framed like an inspector highlight so the boundaries of the element are obvious.</p>
+    </div>
+    <section class="patterns">
+      <h2>Layout patterns</h2>
+      <p>Most pages are the same handful of skeletons wearing different content. Recognizing the pattern first makes it obvious which components (below) you need.</p>
+      <div class="pattern-grid">
+        <div class="pattern-card">
+          <h4>Sidebar layout</h4>
+          <div class="pattern-diagram">
+            <div class="pblock">header</div>
+            <div class="prow">
+              <div class="pblock narrow">sidebar</div>
+              <div class="pblock">main content</div>
+            </div>
+          </div>
+        </div>
+        <div class="pattern-card">
+          <h4>Dashboard layout</h4>
+          <div class="pattern-diagram">
+            <div class="pblock">header</div>
+            <div class="prow">
+              <div class="pblock">stat</div><div class="pblock">stat</div><div class="pblock">stat</div>
+            </div>
+            <div class="pblock">chart / activity</div>
+          </div>
+        </div>
+        <div class="pattern-card">
+          <h4>E-commerce layout</h4>
+          <div class="pattern-diagram">
+            <div class="pblock">header</div>
+            <div class="pblock">hero banner</div>
+            <div class="pblock">categories</div>
+            <div class="pblock">product grid</div>
+            <div class="pblock">footer</div>
+          </div>
+        </div>
+        <div class="pattern-card">
+          <h4>Social feed layout</h4>
+          <div class="pattern-diagram">
+            <div class="prow">
+              <div class="pblock narrow">sidebar</div>
+              <div class="pblock">feed</div>
+              <div class="pblock narrow">right panel</div>
+            </div>
+          </div>
+        </div>
+        <div class="pattern-card">
+          <h4>Master–detail layout</h4>
+          <div class="pattern-diagram">
+            <div class="pblock">header</div>
+            <div class="prow">
+              <div class="pblock narrow">list</div>
+              <div class="pblock">detail view</div>
+            </div>
+          </div>
+        </div>
+        <div class="pattern-card">
+          <h4>Split layout</h4>
+          <div class="pattern-diagram">
+            <div class="prow">
+              <div class="pblock">left panel</div>
+              <div class="pblock">right panel</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="parts"></div>
+  </main>
+</div>
+
+<script>
+const PARTS = [
+{ tag:"header", title:"Header", desc:"Top-of-page band holding the brand/logo and primary navigation. Usually sticky, always present, and the first thing a visitor's eye lands on.",
+html:`<header class="d-header">
+  <div class="brand">Acme</div>
+  <nav>
+    <a href="#">Product</a>
+    <a href="#">Pricing</a>
+    <a href="#">Docs</a>
+  </nav>
+  <button class="d-btn">Sign up</button>
+</header>` },
+
+{ tag:"nav.breadcrumb", title:"Breadcrumb", desc:"Shows the visitor's location within a hierarchy and gives a one-click way back up the tree. Common on docs, e-commerce, and admin dashboards.",
+html:`<nav class="d-breadcrumb">
+  <a href="#">Home</a><span class="sep">/</span>
+  <a href="#">Components</a><span class="sep">/</span>
+  <span class="current">Breadcrumb</span>
+</nav>` },
+
+{ tag:"section.hero", title:"Hero / Banner", desc:"Large, above-the-fold section stating the page's core value proposition with a headline, short supporting copy, and a primary call to action.",
+html:`<section class="d-hero">
+  <h2>Ship UI faster</h2>
+  <p>Copy-paste sections instead of rebuilding them from scratch every project.</p>
+  <button class="d-btn">Get started</button>
+</section>` },
+
+{ tag:"aside.sidebar", title:"Sidebar", desc:"Vertical panel next to the main content, typically holding navigation, filters, or contextual tools. Common in dashboards and documentation layouts.",
+html:`<div class="d-layout">
+  <aside class="d-sidebar">
+    <div class="active">Overview</div>
+    <div>Analytics</div>
+    <div>Settings</div>
+    <div>Billing</div>
+  </aside>
+  <div class="d-content">Main content area</div>
+</div>` },
+
+{ tag:"article.card", title:"Card", desc:"Self-contained content block (image/icon + title + short text) used to group related information. The basic unit of most grid layouts.",
+html:`<article class="d-card">
+  <div class="dot"></div>
+  <h4>Fast setup</h4>
+  <p>Get running in minutes, not hours.</p>
+</article>` },
+
+{ tag:"section.grid", title:"Feature grid", desc:"A repeating row/grid of cards used to lay out features, services, or products side by side so they can be compared at a glance.",
+html:`<div class="d-grid">
+  <div class="d-card"><div class="dot"></div><h4>Feature A</h4><p>Short description.</p></div>
+  <div class="d-card"><div class="dot"></div><h4>Feature B</h4><p>Short description.</p></div>
+  <div class="d-card"><div class="dot"></div><h4>Feature C</h4><p>Short description.</p></div>
+</div>` },
+
+{ tag:"div.carousel", title:"Carousel / Slider", desc:"Rotates through a set of images or cards in a fixed space, usually with arrows and dot indicators. Good for showcasing multiple items without scrolling.",
+html:`<div class="d-carousel">
+  <button class="arrow">&#8249;</button>
+  <div class="slide">Slide 2 of 4</div>
+  <button class="arrow">&#8250;</button>
+</div>
+<div class="d-dots">
+  <span></span><span class="active"></span><span></span><span></span>
+</div>` },
+
+{ tag:"div.tabs", title:"Tabs", desc:"Lets a user switch between multiple views that occupy the same space, without navigating to a new page. Keeps related content organized without overwhelming the layout.",
+html:`<div class="d-tabs">
+  <button class="active">Overview</button>
+  <button>Specs</button>
+  <button>Reviews</button>
+</div>
+<p class="d-muted">Overview panel content goes here.</p>` },
+
+{ tag:"details.accordion", title:"Accordion", desc:"Stacked list of expandable/collapsible items — only relevant content is shown at once. Frequently used for FAQs and settings groups. The native &lt;details&gt;/&lt;summary&gt; tags give this behavior with zero JS.",
+html:`<details class="d-accordion-item" open>
+  <summary>What is this?</summary>
+  <div class="body">A native accordion using &lt;details&gt; and &lt;summary&gt;.</div>
+</details>
+<details class="d-accordion-item">
+  <summary>Does it need JS?</summary>
+  <div class="body">No — the browser handles the toggle.</div>
+</details>` },
+
+{ tag:"dialog.modal", title:"Modal / Dialog", desc:"Overlay window that interrupts the page to demand a decision or show focused content, dimming everything behind it. Use sparingly — it blocks the rest of the UI.",
+html:`<div class="d-modal-wrap">
+  <div class="d-modal">
+    <h4>Delete item?</h4>
+    <p>This action can't be undone.</p>
+    <div class="row">
+      <button class="d-btn ghost">Cancel</button>
+      <button class="d-btn">Delete</button>
+    </div>
+  </div>
+</div>` },
+
+{ tag:"form", title:"Form section", desc:"Collects structured input from the user — labels paired tightly with their inputs, a clear submit action, and (ideally) inline validation.",
+html:`<form class="d-form">
+  <label>Email
+    <input type="email" placeholder="you@example.com">
+  </label>
+  <label>Password
+    <input type="password" placeholder="••••••••">
+  </label>
+  <button class="d-btn" type="submit">Log in</button>
+</form>` },
+
+{ tag:"table", title:"Table", desc:"Displays rows of structured, comparable data in columns. Best for data that benefits from row/column scanning — anything else is usually better as cards.",
+html:`<table class="d-table">
+  <thead><tr><th>Name</th><th>Role</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td>Aiko</td><td>Engineer</td><td>Active</td></tr>
+    <tr><td>Ben</td><td>Designer</td><td>Invited</td></tr>
+  </tbody>
+</table>` },
+
+{ tag:"nav.pagination", title:"Pagination", desc:"Splits a long list of results into pages and lets the user jump between them. Keeps initial load light and result sets scannable.",
+html:`<nav class="d-pagination">
+  <button>&#8249;</button>
+  <button class="active">1</button>
+  <button>2</button>
+  <button>3</button>
+  <button>&#8250;</button>
+</nav>` },
+
+{ tag:"div.alert", title:"Alert / Notification banner", desc:"Surfaces a system message — success, warning, or error — inline with the content it relates to, without needing a popup.",
+html:`<div class="d-alert">
+  ⚠️ <div><strong>Heads up —</strong> your trial ends in 3 days.</div>
+</div>` },
+
+{ tag:"span.badge", title:"Badge / Tag", desc:"Small label used to flag status, category, or count — e.g. \"New\", \"Beta\", a notification count. Almost always paired with another element, not standalone.",
+html:`<span class="d-badge">New</span>` },
+
+{ tag:"div.tooltip", title:"Tooltip", desc:"Small floating label that appears on hover/focus to give extra context for an icon or truncated label, without taking up permanent space.",
+html:`<div class="d-tooltip-wrap">
+  <button class="d-btn ghost">Hover me</button>
+  <div class="tip">Extra context here</div>
+</div>` },
+
+{ tag:"div.dropdown", title:"Dropdown menu", desc:"Reveals a list of actions or options anchored to a trigger element, collapsing them until needed to save space.",
+html:`<div class="d-dropdown">
+  <button class="d-btn ghost">Options ▾</button>
+  <div class="menu">
+    <div>Edit</div>
+    <div>Duplicate</div>
+    <div>Delete</div>
+  </div>
+</div>` },
+
+{ tag:"div.progress", title:"Progress bar", desc:"Communicates completion of a task or process as a filled bar, so the user knows roughly how much is left.",
+html:`<div class="d-progress"><div class="fill"></div></div>` },
+
+{ tag:"div.stepper", title:"Stepper / Wizard", desc:"Shows position within a multi-step flow (checkout, onboarding, setup) so the user knows how many steps remain.",
+html:`<div class="d-stepper">
+  <div class="step">1</div><div class="bar"></div>
+  <div class="step">2</div><div class="bar"></div>
+  <div class="step todo">3</div>
+</div>` },
+
+{ tag:"div.avatar", title:"Avatar / profile block", desc:"Represents a user or account, usually an image or initials, paired with their name — used in headers, comment threads, and team lists.",
+html:`<div class="d-profile">
+  <div class="d-avatar">KK</div>
+  <div>
+    <div><strong>Kuku</strong></div>
+    <div class="d-muted" style="font-size:12px">Developer</div>
+  </div>
+</div>` },
+
+{ tag:"div.search", title:"Search bar", desc:"Input dedicated to querying content, typically paired with an icon and sometimes live suggestions as the user types.",
+html:`<div class="d-search">
+  🔍 <input type="text" placeholder="Search...">
+</div>` },
+
+{ tag:"section.pricing", title:"Pricing section", desc:"Side-by-side comparison of plan tiers, each with a price, feature list, and CTA — usually with one plan visually highlighted as \"recommended\".",
+html:`<div class="d-pricing">
+  <div class="d-price-card">
+    <div>Starter</div>
+    <div class="amount">$0</div>
+    <button class="d-btn ghost">Choose</button>
+  </div>
+  <div class="d-price-card highlight">
+    <div>Pro</div>
+    <div class="amount">$19</div>
+    <button class="d-btn">Choose</button>
+  </div>
+</div>` },
+
+{ tag:"blockquote.testimonial", title:"Testimonial", desc:"Quotes a real (or representative) user to build trust through social proof — pairs a short quote with the person's name/role.",
+html:`<blockquote class="d-testimonial">
+  "This cut our setup time in half."
+  <div class="who">— Priya N., Frontend Lead</div>
+</blockquote>` },
+
+{ tag:"section.faq", title:"FAQ section", desc:"Answers common pre-purchase or pre-signup questions directly on the page, reducing support load and hesitation.",
+html:`<div class="d-faq">
+  <div class="q">Can I cancel anytime?</div>
+  <p class="a">Yes, from your billing settings — no contracts.</p>
+  <div class="q">Is there a free trial?</div>
+  <p class="a">Yes, 14 days, no card required.</p>
+</div>` },
+
+{ tag:"section.newsletter", title:"Newsletter / subscribe", desc:"Compact email-capture block, usually near the footer, offering updates in exchange for an email address.",
+html:`<div class="d-newsletter">
+  <div style="flex:1 1 160px">Get product updates monthly.</div>
+  <input type="email" placeholder="you@example.com">
+  <button class="d-btn">Subscribe</button>
+</div>` },
+
+{ tag:"section.cta", title:"CTA section", desc:"Full-width block whose only job is to prompt one specific action — usually placed right before the footer as a last nudge.",
+html:`<section class="d-cta">
+  <h3 style="margin:0 0 6px">Ready to try it?</h3>
+  <button class="d-btn" style="background:#fff;color:var(--accent)">Start free</button>
+</section>` },
+
+{ tag:"footer", title:"Footer", desc:"Bottom-of-page band with sitemap links, legal info, and secondary navigation — the last thing on the page, present on every route.",
+html:`<footer class="d-footer">
+  <div class="col">
+    <h5>Product</h5>
+    <div>Features</div><div>Pricing</div><div>Changelog</div>
+  </div>
+  <div class="col">
+    <h5>Company</h5>
+    <div>About</div><div>Careers</div><div>Contact</div>
+  </div>
+  <div class="col">
+    <h5>Legal</h5>
+    <div>Privacy</div><div>Terms</div>
+  </div>
+</footer>` },
+
+{ tag:"div.container", title:"Container", desc:"Invisible structural wrapper that constrains content width and centers it on the page. It has no visual identity of its own — it's pure layout plumbing, which is why it's usually drawn as a dashed box.",
+html:`<div class="d-container">
+  max-width: 640px; margin: 0 auto;
+  (everything inside stays centered and never touches the viewport edge)
+</div>` },
+
+{ tag:"section.panel", title:"Panel", desc:"A bordered content block with its own header and body — like a card, but usually larger and used for a single focused piece of UI (a settings block, a chart, a list) rather than a repeating grid item.",
+html:`<section class="d-panel">
+  <div class="panel-head">Account details</div>
+  <div class="panel-body">Panel body content lives here — forms, tables, charts, etc.</div>
+</section>` },
+
+{ tag:"div.widget", title:"Widget", desc:"Small, self-contained unit that displays one piece of live data (a metric, a mini chart, a status). Widgets are usually arranged in a grid on a dashboard.",
+html:`<div class="d-widget">
+  <div class="label">Active users</div>
+  <div class="value">1,204</div>
+  <div class="delta">▲ 8.2% this week</div>
+</div>` },
+
+{ tag:"div.topbar", title:"Topbar", desc:"Thin utility strip above or in place of the main header, holding secondary actions (search, notifications, account menu) rather than primary navigation — common in dashboards and admin panels.",
+html:`<div class="d-topbar">
+  <div>Dashboard</div>
+  <div class="actions">
+    🔔 <div class="d-avatar" style="width:26px;height:26px;font-size:11px">K</div>
+  </div>
+</div>` },
+
+{ tag:"aside.drawer", title:"Drawer", desc:"Sidebar that slides in over the content (rather than sitting permanently beside it) and can be dismissed — common on mobile nav and filter panels where screen space is tight.",
+html:`<div class="d-drawer-wrap">
+  <aside class="d-drawer">
+    <div><strong>Menu</strong></div>
+    <div>Home</div>
+    <div>Notes</div>
+    <div>Settings</div>
+  </aside>
+  <div class="d-drawer-rest">page content behind the drawer</div>
+</div>` },
+
+{ tag:"div.toast", title:"Toast", desc:"Small, temporary notification that appears (often bottom-corner), auto-dismisses, and doesn't block interaction — unlike a modal. Used for confirmations like \"Saved\" or \"Item added\".",
+html:`<div class="d-toast">✅ Changes saved</div>` },
+
+{ tag:"div.skeleton", title:"Skeleton loader", desc:"Gray placeholder shapes shown while real content is still loading, mirroring the eventual layout so the page doesn't jump once data arrives. Preferred over spinners for content-heavy UIs.",
+html:`<div class="d-skeleton">
+  <div class="sk-circle"></div>
+  <div class="sk-lines">
+    <div class="sk-line"></div>
+    <div class="sk-line short"></div>
+  </div>
+</div>` },
+
+{ tag:"span.chip", title:"Chip", desc:"Compact, often removable token representing a discrete piece of input — a selected filter, a tag, an invited email. Different from a badge in that it usually supports an action (like an ✕ to remove it).",
+html:`<span class="d-chip">React <button>✕</button></span>` },
+
+{ tag:"ol.timeline", title:"Timeline", desc:"Chronological list of events connected by a vertical line, used for activity logs, order tracking, or history views where sequence and time matter more than grouping.",
+html:`<ol class="d-timeline">
+  <li class="event"><div class="when">Jul 12</div>Note uploaded</li>
+  <li class="event"><div class="when">Jul 13</div>Quiz generated</li>
+  <li class="event"><div class="when">Jul 14</div>Flashcards reviewed</li>
+</ol>` },
+];
+
+const tocList = document.getElementById('tocList');
+const parts = document.getElementById('parts');
+
+PARTS.forEach((p, i)=>{
+  const id = 'part-' + i;
+
+  // TOC entry
+  const li = document.createElement('li');
+  li.innerHTML = `<a href="#${id}">${p.title}</a>`;
+  tocList.appendChild(li);
+
+  // Section
+  const section = document.createElement('section');
+  section.className = 'part';
+  section.id = id;
+  section.innerHTML = `
+    <div class="part-head">
+      <span class="part-num">${String(i+1).padStart(2,'0')}</span>
+      <span class="part-name">${p.title}</span>
+      <span class="part-tag">&lt;${p.tag}&gt;</span>
+    </div>
+    <p class="part-desc">${p.desc}</p>
+    <div class="viewport">
+      <span class="badge">${p.tag}</span>
+      <span class="c2"></span><span class="c3"></span>
+      <div class="d-scope demo"></div>
+    </div>
+    <div class="codebox">
+      <div class="bar"><span>index.html</span><button class="copy">Copy</button></div>
+      <pre><code></code></pre>
+    </div>
+  `;
+  parts.appendChild(section);
+
+  section.querySelector('.demo').innerHTML = p.html;
+  section.querySelector('code').textContent = p.html;
+
+  section.querySelector('.copy').addEventListener('click', ()=>{
+    navigator.clipboard.writeText(p.html);
+    const btn = section.querySelector('.copy');
+    const old = btn.textContent;
+    btn.textContent = 'Copied';
+    setTimeout(()=> btn.textContent = old, 1200);
+  });
+});
+</script>
+</body>
+</html>

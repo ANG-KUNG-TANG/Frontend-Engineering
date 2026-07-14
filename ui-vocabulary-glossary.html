@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UI Vocabulary — Glossary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5F7FA;
+    --surface:#FFFFFF;
+    --ink:#10151F;
+    --muted:#5B6572;
+    --line:#C9D3E0;
+    --line-soft:#E1E7F0;
+    --accent:#2F5EFF;
+    --accent-soft:#E8EDFF;
+    --accent-ink:#1A3ACF;
+    --mono:'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+    --sans:'Inter', system-ui, -apple-system, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--bg); color:var(--ink); font-family:var(--sans); line-height:1.55;}
+  a{color:var(--accent);}
+
+  .wrap{max-width:980px; margin:0 auto; padding:44px 24px 120px;}
+  @media (max-width:600px){.wrap{padding:28px 16px 80px;}}
+
+  .intro h1{font-family:var(--mono); font-size:26px; margin:0 0 8px; letter-spacing:-0.01em;}
+  .intro p{color:var(--muted); max-width:640px; font-size:15px;}
+  .intro{margin-bottom:8px; padding-bottom:24px; border-bottom:1px dashed var(--line);}
+
+  .count{font-family:var(--mono); font-size:12px; color:var(--muted); margin:14px 0 26px;}
+
+  /* jump index */
+  .index{
+    display:flex; flex-wrap:wrap; gap:8px;
+    margin-bottom:40px; padding-bottom:26px;
+    border-bottom:1px dashed var(--line);
+  }
+  .index a{
+    font-family:var(--mono); font-size:12px;
+    color:var(--accent-ink); background:var(--accent-soft);
+    border:1px solid #C9D6FF; border-radius:999px;
+    padding:4px 12px; text-decoration:none;
+  }
+  .index a:hover{background:#D9E2FF;}
+
+  .category{margin-bottom:44px; scroll-margin-top:20px;}
+  .category h2{
+    font-family:var(--mono); font-size:14px;
+    color:var(--accent-ink);
+    display:flex; align-items:center; gap:10px;
+    margin:0 0 4px;
+  }
+  .category h2::after{content:""; flex:1; height:1px; background:var(--line-soft);}
+  .category .cat-desc{color:var(--muted); font-size:13px; margin:0 0 18px;}
+
+  .terms{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px;}
+  .term{
+    background:var(--surface); border:1px solid var(--line-soft);
+    border-radius:10px; padding:16px 18px;
+  }
+  .term .name{font-weight:700; font-size:14px; margin-bottom:4px; display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;}
+  .term .aka{font-family:var(--mono); font-size:11px; color:var(--muted); font-weight:400;}
+  .term .def{font-size:13px; color:var(--ink); margin:0 0 8px;}
+  .term .seen{font-size:11.5px; color:var(--muted);}
+  .term .seen b{color:var(--muted); font-weight:600;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="intro">
+    <h1>&lt;ui-vocabulary/&gt;</h1>
+    <p>The plain-English names for UI parts, grouped by what they're for. Read once, then when a design comes up you'll already have the word for every piece of it instead of pointing and saying "that box up there."</p>
+  </div>
+  <div class="count" id="count"></div>
+  <nav class="index" id="index"></nav>
+  <div id="categories"></div>
+</div>
+
+<script>
+const DATA = [
+{ cat:"Layout & Structure", desc:"The invisible plumbing that decides where everything sits — none of these have a distinct visual style of their own.",
+  terms:[
+    {name:"Layout", def:"The overall arrangement of elements on a screen — how space is divided before any real content goes in."},
+    {name:"Container", def:"A wrapping element that constrains content to a max width and centers it, so text doesn't stretch edge-to-edge on wide screens."},
+    {name:"Wrapper", def:"A generic outer element used purely to group or style children — has no meaning of its own beyond that.", aka:"div"},
+    {name:"Section", def:"A thematic chunk of a page, usually with its own heading, that could stand on its own if pulled out."},
+    {name:"Grid", def:"A layout system that arranges items into aligned rows and columns, letting content reflow as space changes."},
+    {name:"Row / Column", def:"A single horizontal line (row) or vertical division (column) within a grid or flex layout."},
+    {name:"Gutter", def:"The fixed gap of space between columns or grid items, keeping content from touching."},
+    {name:"Viewport", def:"The visible area of the page inside the browser window at any given moment — resizes with the window."},
+    {name:"Fold", aka:"\"above the fold\"", def:"The content visible on load, before the user scrolls — historically a newspaper term, still used for the same idea online."},
+    {name:"Breakpoint", def:"A screen-width threshold where the layout switches to a different arrangement, e.g. sidebar collapses into a drawer on mobile."},
+  ]},
+
+{ cat:"Navigation", desc:"Everything whose job is getting the user somewhere else in the product.",
+  terms:[
+    {name:"Header", def:"The top band of the page holding the brand/logo and primary navigation. Present on nearly every page."},
+    {name:"Navbar", def:"The row of navigation links, often living inside the header, listing the main sections of the site."},
+    {name:"Topbar", def:"A thin utility strip for secondary actions — search, notifications, account menu — separate from primary navigation."},
+    {name:"Sidebar", def:"A vertical panel beside the main content holding navigation, filters, or tools; usually fixed in place."},
+    {name:"Drawer", def:"A sidebar-like panel that slides in over the content and can be dismissed, rather than sitting permanently."},
+    {name:"Breadcrumb", def:"A trail of links showing the user's location in a hierarchy, e.g. Home / Category / Item."},
+    {name:"Tabs", def:"A set of labels that switch between views occupying the same space, without leaving the page."},
+    {name:"Pagination", def:"Controls for moving between pages of a long result set — numbered pages or next/previous arrows."},
+    {name:"Stepper", aka:"wizard", def:"A visual indicator of position within a multi-step flow like checkout or onboarding."},
+    {name:"Dropdown menu", def:"A list of options that appears anchored below a trigger element, hidden until clicked or hovered."},
+    {name:"Hamburger menu", def:"The three-line icon that reveals a hidden navigation menu, typically on mobile."},
+    {name:"Footer", def:"The bottom band of the page with sitemap links, legal info, and secondary navigation — present on every route."},
+    {name:"Anchor link", def:"A link that jumps to a specific point within the same page rather than loading a new one."},
+    {name:"Sticky nav", def:"A header or navbar that stays pinned to the top of the viewport as the user scrolls down."},
+  ]},
+
+{ cat:"Containers & Content Blocks", desc:"The boxes that actually hold content — the building blocks most pages are assembled from.",
+  terms:[
+    {name:"Card", def:"A self-contained block — image or icon, title, short text — used to group related information; the base unit of most grids."},
+    {name:"Panel", def:"A bordered content block with its own header and body, usually larger than a card and used for one focused piece of UI."},
+    {name:"Widget", def:"A small self-contained unit displaying one live piece of data, like a metric or mini chart — usually arranged in a dashboard grid."},
+    {name:"Hero", aka:"banner", def:"The large, above-the-fold section stating the page's core message, with a headline and primary call to action."},
+    {name:"Modal", aka:"dialog", def:"An overlay window that interrupts the page and dims everything behind it, demanding a decision or showing focused content."},
+    {name:"Popover", def:"A small floating panel anchored to a trigger element, showing extra content or actions without leaving the page."},
+    {name:"Tooltip", def:"A small floating label appearing on hover or focus, giving brief context for an icon or truncated label."},
+    {name:"Accordion", def:"A stack of expandable/collapsible items where only the opened one shows its content — common for FAQs."},
+    {name:"Carousel", aka:"slider", def:"A rotating set of images or cards shown one (or a few) at a time in a fixed space, usually with arrows or dots."},
+    {name:"Table", def:"Rows of structured, comparable data arranged in columns — best when scanning across rows and columns matters."},
+    {name:"List", def:"A vertical sequence of items, simpler than a table — no columns to compare, just one item after another."},
+    {name:"Feed", def:"A continuously scrollable stream of content items, typically chronological — the core pattern of social apps."},
+    {name:"Timeline", def:"A chronological list of events connected by a line, used for activity logs or order/history tracking."},
+    {name:"Masonry grid", def:"A grid where items of varying heights are packed tightly with no fixed row height, like Pinterest's layout."},
+  ]},
+
+{ cat:"Feedback & Status", desc:"How the interface talks back to the user about what just happened or what state something is in.",
+  terms:[
+    {name:"Toast", aka:"snackbar", def:"A small temporary notification, often bottom-corner, that auto-dismisses without blocking interaction — e.g. \"Saved\"."},
+    {name:"Alert", def:"An inline message — success, warning, or error — shown next to the content it relates to, without a popup."},
+    {name:"Badge", def:"A small label flagging status, category, or a count, e.g. \"New\" or a notification number — always paired with something else."},
+    {name:"Chip", aka:"tag", def:"A compact, often removable token representing one piece of input, like a selected filter or an invited email."},
+    {name:"Skeleton loader", def:"Gray placeholder shapes shown while real content loads, mirroring the eventual layout so nothing jumps once data arrives."},
+    {name:"Spinner", aka:"loader", def:"A simple rotating indicator showing that something is loading, with no sense of how much longer it will take."},
+    {name:"Progress bar", def:"A filled bar communicating how much of a task or process is complete."},
+    {name:"Empty state", def:"What's shown when a list, inbox, or search has nothing in it yet — ideally explains why and what to do next."},
+  ]},
+
+{ cat:"Forms & Inputs", desc:"Everything the user types into, selects, or toggles to give the interface information.",
+  terms:[
+    {name:"Form", def:"A collection of inputs grouped for a single submission — labels paired tightly with their fields and a clear submit action."},
+    {name:"Input field", def:"A single-line box for typed text, e.g. an email or name field."},
+    {name:"Textarea", def:"A multi-line input box for longer free text, like a comment or message."},
+    {name:"Checkbox", def:"A toggle for one option that can be independently on or off, usually used in groups of non-exclusive choices."},
+    {name:"Radio button", def:"A round toggle used in a group where only one option can be selected at a time."},
+    {name:"Toggle", aka:"switch", def:"An on/off control styled like a physical switch, typically for a single setting."},
+    {name:"Range slider", def:"A draggable control for picking a numeric value (or range) along a track, e.g. a price range."},
+    {name:"Select", aka:"dropdown input", def:"A field that opens a list of options and lets the user pick one, collapsing back once chosen."},
+    {name:"Search bar", def:"An input dedicated to querying content, usually paired with a search icon and sometimes live suggestions."},
+    {name:"Autocomplete", def:"A list of matching suggestions that appears as the user types into a field, to speed up entry."},
+    {name:"Datepicker", def:"A calendar widget that opens from a field to let the user pick a date instead of typing one."},
+    {name:"File uploader", def:"A control (often a drag-and-drop zone) for attaching one or more files to a form."},
+  ]},
+
+{ cat:"Actions & Buttons", desc:"The controls a user clicks or taps to make something happen.",
+  terms:[
+    {name:"Button", def:"A clickable control that triggers an action — the most basic interactive element in any UI."},
+    {name:"Primary / secondary button", def:"Visual hierarchy for actions on the same screen — primary is the one you want chosen; secondary is the lower-emphasis alternative."},
+    {name:"Icon button", def:"A button represented by an icon alone rather than text, used when space is tight or the icon is unambiguous (e.g. a trash can for delete)."},
+    {name:"FAB", aka:"floating action button", def:"A circular button that floats above the content, usually bottom-right, for the single most important action on the screen."},
+    {name:"Link", def:"Text (or an element) that navigates somewhere when clicked, styled distinctly from surrounding non-interactive text."},
+    {name:"CTA", aka:"call to action", def:"The button or link a screen most wants the user to click — \"Sign up\", \"Buy now\", \"Start free trial\"."},
+  ]},
+
+{ cat:"Data Display", desc:"Elements built specifically to represent a person, a number, or a relationship visually.",
+  terms:[
+    {name:"Avatar", def:"A small image or initials representing a user or account, used in headers, comment threads, and team lists."},
+    {name:"Stat card", aka:"KPI widget", def:"A card showing one number (a metric) prominently, often with a trend indicator next to it."},
+    {name:"Chart", def:"A visual representation of numeric data — bar, line, pie, etc. — for spotting trends faster than a table allows."},
+    {name:"Divider", def:"A thin line separating sections or list items, purely visual with no interactive purpose."},
+  ]},
+
+{ cat:"Overlay & Depth", desc:"Concepts about what sits on top of what, and how the interface fakes physical layering.",
+  terms:[
+    {name:"Overlay", def:"Any element that sits visually above the main content, like a modal, drawer, or dropdown menu."},
+    {name:"Backdrop", aka:"scrim", def:"The dimmed layer placed behind an overlay (like a modal) to focus attention and block clicks on what's underneath."},
+    {name:"Z-index layer", def:"The stacking order that decides which overlapping element appears on top — higher values sit above lower ones."},
+  ]},
+];
+
+const indexEl = document.getElementById('index');
+const catsEl = document.getElementById('categories');
+let total = 0;
+
+DATA.forEach((group, i)=>{
+  const id = 'cat-' + i;
+  total += group.terms.length;
+
+  const link = document.createElement('a');
+  link.href = '#' + id;
+  link.textContent = group.cat;
+  indexEl.appendChild(link);
+
+  const section = document.createElement('section');
+  section.className = 'category';
+  section.id = id;
+  section.innerHTML = `
+    <h2>${group.cat}</h2>
+    <p class="cat-desc">${group.desc}</p>
+    <div class="terms">
+      ${group.terms.map(t => `
+        <div class="term">
+          <div class="name">${t.name}${t.aka ? `<span class="aka">${t.aka}</span>` : ''}</div>
+          <p class="def">${t.def}</p>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  catsEl.appendChild(section);
+});
+
+document.getElementById('count').textContent = `${total} terms across ${DATA.length} categories`;
+</script>
+</body>
+</html>
